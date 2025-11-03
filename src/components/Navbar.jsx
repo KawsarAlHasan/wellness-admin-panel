@@ -1,10 +1,13 @@
-import { Avatar, Dropdown, Button, Divider, Tag } from "antd";
+import { Avatar, Dropdown, Button, Divider, Tag, Badge, Drawer } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import logoImage from "../assets/mainlogo.png";
 import { MenuOutlined, UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { MdOutlineNotificationsActive } from "react-icons/md";
 import ChatSupportModel from "./ChatSupportModel";
 import WellnessPreferences from "./WellnessPreferences";
+import CreateEventModal from "./CreateEventModal";
+import { useState } from "react";
+import Notification from "./Notification";
 
 // import { signOutAdmin, useAdminDashboard } from "../api/api";
 // import ChangePassword from "./ChangePassword";
@@ -13,6 +16,8 @@ import WellnessPreferences from "./WellnessPreferences";
 const Navbar = ({ showDrawer }) => {
   // const { adminDashboard, isLoading, isError, error, refetch } =
   //   useAdminDashboard();
+
+  const [drawerVisible, setDrawerVisible] = useState(false);
 
   const navigate = useNavigate();
 
@@ -85,7 +90,7 @@ const Navbar = ({ showDrawer }) => {
   ];
 
   return (
-    <div className="w-full px-2">
+    <div className="w-full px-4">
       <div className="flex items-center justify-between h-16">
         {/* Left section */}
         <div className="flex items-center lg:hidden">
@@ -111,12 +116,21 @@ const Navbar = ({ showDrawer }) => {
         </div>
 
         {/* Right section */}
-        <div className="flex items-center gap-4">
-          <Button className="!bg-black !rounded-full !text-white">
-            Create Event
-          </Button>
+        <div className="flex items-center gap-2">
+          <CreateEventModal />
+
           {/* icon button */}
-          <MdOutlineNotificationsActive className="text-2xl cursor-pointer hover:text-gray-600 transition-colors" />
+          <Badge
+            count={6}
+            size="small"
+            className="cursor-pointer p-2 rounded-full bg-white hover:text-blue-500 transition-colors"
+          >
+            <MdOutlineNotificationsActive
+              onClick={() => setDrawerVisible(true)}
+              className="text-2xl cursor-pointer hover:text-gray-600 transition-colors"
+            />
+          </Badge>
+
           <Dropdown
             menu={{ items: profileMenuItems }}
             trigger={["click"]}
@@ -156,6 +170,19 @@ const Navbar = ({ showDrawer }) => {
           </Dropdown>
         </div>
       </div>
+
+      <Drawer
+        title="Notifications"
+        placement="right"
+        onClose={() => setDrawerVisible(false)}
+        open={drawerVisible}
+        width={350}
+        bodyStyle={{ padding: 0 }}
+      >
+        <div className="p-2">
+          <Notification />
+        </div>
+      </Drawer>
     </div>
   );
 };
